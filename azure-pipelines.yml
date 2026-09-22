@@ -1,0 +1,26 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- script: |
+    echo "Current directory:"
+    pwd
+    echo "Repository files:"
+    ls -la
+    echo "Searching for pom.xml:"
+    find . -name "pom.xml" -print
+  displayName: 'Check project files'
+
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'spring-petclinic-main/pom.xml'
+    goals: 'clean test package'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'
+    mavenVersionOption: 'Default'
